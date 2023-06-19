@@ -8,7 +8,7 @@ path="AttendenceImage"
 images=[]
 classNames=[]
 myList=os.listdir(path)
-print(myList)
+#print(myList)
 
 for cl in myList:
     curImg=cv2.imread(f'{path}/{cl}')
@@ -24,7 +24,7 @@ def findEncoding(images):
     return encodeList
 
 def markAttendance(name):
-    with open('Attendance.csv','r+') as f:
+    with open('Attendance.csv',mode='r+') as f:
         myDataList=f.readlines()
         nameList=[]
         for line in myDataList:
@@ -40,7 +40,7 @@ def markAttendance(name):
 
 
 encodeListKnown= findEncoding(images)
-print("Encodeing Complete")
+#print("Encodeing Complete")
 
 cap = cv2.VideoCapture(0)
 
@@ -55,7 +55,7 @@ while True:
     for encodeFace,faceLoc in zip(encodesCurFrame,facesCurFrame):
         matches=face_recognition.compare_faces(encodeListKnown,encodeFace)
         faceDis=face_recognition.face_distance(encodeListKnown,encodeFace)
-        print(faceDis)
+        #print(faceDis)
         matchIndex= np.argmin(faceDis)
 
         if matches[matchIndex]:
@@ -69,6 +69,8 @@ while True:
             markAttendance(name)
 
     cv2.imshow("webcam",img)
-    cv2.waitKey(1)
-
+    if cv2.waitKey(10)==13:
+        break
+cv2.destroyAllWindows()
+cap.release()
 
